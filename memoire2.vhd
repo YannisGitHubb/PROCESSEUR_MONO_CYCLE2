@@ -22,7 +22,7 @@ architecture Arch of memoire2 is
 	end loop;  
 	result(15):=X"00000030"; 
 	return result; 
-	end init_memoire; -- D�claration et Initialisation du Banc de Registres 16x32 bits
+	end init_memoire; -- D?claration et Initialisation du Banc de Registres 16x32 bits
 	signal instru: table:=init_memoire; 
 begin 
 -- Lecture de la memoire 
