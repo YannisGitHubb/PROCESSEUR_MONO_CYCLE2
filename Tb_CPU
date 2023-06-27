@@ -1,0 +1,64 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity Tb_CPU is
+end entity processor_tb;
+
+architecture arch_Tb_CPU of Tb_CPU is
+    constant N : integer := 32;
+    constant I : integer := 8;
+    constant J : integer := 24;
+    signal clock, reset, WE : std_logic := '0';
+    signal Instruction, PSR_in, DATAIN : std_logic_vector(N-1 downto 0);
+    signal DATAOUT : std_logic_vector(31 downto 0);
+begin
+    -- Instantiate the unit under test (UUT)
+    uut: entity work.processor(N => N, I => I, J => J)
+        port map (
+            clock => clock,
+            reset => reset,
+            Instruction => Instruction,
+            PSR_in => PSR_in,
+            DATAIN => DATAIN,
+            DATAOUT => DATAOUT,
+            WE => WE
+        );
+
+    -- Clock process
+    clock_process : process
+    begin
+        clock <= '0';
+        wait for 10 ns;
+        clock <= '1';
+        wait for 10 ns;
+    end process;
+
+    -- Stimulus process
+    stim_proc: process
+    begin
+        -- Hold reset state for 100 ns.
+        reset <= '1';
+        wait for 100 ns;  
+        
+        reset <= '0';      
+        -- Wait for 100 ns for global reset to finish
+        wait for 100 ns;
+
+        -- ADDi instruction with Rn=2, Rd=1, Imm=0
+        Instruction <= "111000101000" & "0000" & "0010" & "0001" & "00000000";
+        PSR_in <= (others => '0');
+        DATAIN <= (others => '0');
+        WE <= '0';
+        wait for 20 ns;
+
+        -- Add more instructions as needed
+
+        -- Hold simulation for a while
+        wait for 1000 ns;
+        
+        -- End simulation
+        std.env.stop(0);
+    end process;
+end architecture arch_Tb_CPU;
+
